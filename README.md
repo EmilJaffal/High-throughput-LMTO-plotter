@@ -13,7 +13,7 @@ The plotter so far can generate density of states and bandstructure plots. The s
 
 The code is designed for interactive use without the need to write any code.
 
-![HT-demo-gif](https://github.com/EmilJaffal/Site-Analysis/blob/main/assets/HT_DEMO.gif)
+![HT-demo-gif](https://github.com/EmilJaffal/High-throughput-LMTO-plotter/tree/main/assets/HT_DEMO.gif)
 
 ## Getting started
 
