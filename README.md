@@ -30,7 +30,6 @@ Once the code is executed using `python plotter.py`, the following prompt will
 appear, asking you to input a path:
 
 ```text
-
 Would you like to process a folder of different structures? (y/n): y
 ```
 
@@ -38,20 +37,17 @@ You may then choose either a folder containing the DOS and/or bandstructure .csv
 
 ```text
 Would you like to process a folder of different structures? (y/n): y
-
 ```
 
 Selecting y only if it is a directory containing multiple folders of calculation outputs
 
 ```text
-
 Choose an option for all folders: 1. Plot DOS, 2. Plot band structure, 3. Plot all of the above: 3
 ```
 
 and you're left with 
 
 ```text
-
 Processing folder: /Users/emiljaffal/documents/github/High-throughput-LMTO-plotter/Folder_with_lots_of_structures/Mg3Sb2-1406602
 Plot saved to: /Users/emiljaffal/documents/github/High-throughput-LMTO-plotter/Folder_with_lots_of_structures/Mg3Sb2-1406602/Mg3Sb2-1406602_DOS.png
 Plot saved to: /Users/emiljaffal/documents/github/High-throughput-LMTO-plotter/Folder_with_lots_of_structures/Mg3Sb2-1406602/Mg3Sb2-1406602_DOS_noE.png
