@@ -13,7 +13,7 @@ The plotter so far can generate density of states and bandstructure plots. The s
 
 The code is designed for interactive use without the need to write any code.
 
-![SA-demo-gif](https://github.com/EmilJaffal/Site-Analysis/blob/main/assets/siteanalysis_DEMO.gif)
+![HT-demo-gif](https://github.com/EmilJaffal/Site-Analysis/blob/main/assets/HT_DEMO.gif)
 
 ## Getting started
 
@@ -26,77 +26,56 @@ $ pip install -r requirements.txt
 $ python plotter.py
 ```
 
-Once the code is executed using `python main.py`, the following prompt will
-appear, asking you to choose one of the available structure types:
+Once the code is executed using `python plotter.py`, the following prompt will
+appear, asking you to input a path:
 
 ```text
 
-More than one structure types are fould in the input list.
-Please select one structure type form the list below.
-
-No  Count Structure type
-(1) 19    CuTi,tP4,129
-(2) 5     Ca14AlSb11,tI208,142
-Please enter the number corresponding to the selected structure type: 
+Would you like to process a folder of different structures? (y/n): y
 ```
 
-You may then choose to process whichever structure type you would like, and it will process the sites.
+You may then choose either a folder containing the DOS and/or bandstructure .csv outputs of a single structure or a folder filled with them.
 
-When a structure type has more than 5 sites, a prompt will be given to select the sites for further analysis. For any option, SA will ask you to choose a structure type from the folder containing `.cif` files:
+```text
+Would you like to process a folder of different structures? (y/n): y
 
 ```
-There are 9 sites present for this structure type.
-Please select a maximum of five sites from the the list below.
-Enter the numbers separated by space. e.g. 1 3 4 6
 
-No Site
-(1) 8a
-(2) 8b
-(3) 16e
-(4) 16f
-(5) 32g1
-(6) 32g2
-(7) 32g3
-(8) 32g4
-(9) 32g5
-Please enter the numbers corresponding to the selected sites: 
+Selecting y only if it is a directory containing multiple folders of calculation outputs
+
+```text
+
+Choose an option for all folders: 1. Plot DOS, 2. Plot band structure, 3. Plot all of the above: 3
 ```
 
-#### Output 1 - .csv
+and you're left with 
 
-Data for each folder is saved in `[structuretype].csv`. Below is an example of a .csv of your structure type containing: filename, formula, notes (synthesis conditions), # of elements and site occupations.
-The first row shows the average coordinates of the sites along with the associated standard deviation for all the files processed with the selected structure type.  
+```text
 
-You can find an example of our test set here: [SA-csv](https://github.com/EmilJaffal/Site-Analysis/blob/main/CuTi-tP4.csv)
+Processing folder: /Users/emiljaffal/documents/github/High-throughput-LMTO-plotter/Folder_with_lots_of_structures/Mg3Sb2-1406602
+Plot saved to: /Users/emiljaffal/documents/github/High-throughput-LMTO-plotter/Folder_with_lots_of_structures/Mg3Sb2-1406602/Mg3Sb2-1406602_DOS.png
+Plot saved to: /Users/emiljaffal/documents/github/High-throughput-LMTO-plotter/Folder_with_lots_of_structures/Mg3Sb2-1406602/Mg3Sb2-1406602_DOS_noE.png
+Plot saved to: /Users/emiljaffal/documents/github/High-throughput-LMTO-plotter/Folder_with_lots_of_structures/Mg3Sb2-1406602/Mg3Sb2_bandstructure.png
+teehee tnx!
+```
 
-#### Output 2 - Heatmaps
-
-Periodic table heat maps showing element distribution of the compounds in the selected structure type:
-
-![SA-heatmap](https://github.com/EmilJaffal/Site-Analysis/blob/main/ElemDist_CuTi-tP4.png)
-
-and element distribution of sites:
-
-![SA-site-heatmap](https://github.com/EmilJaffal/Site-Analysis/blob/main/ElemDist_CuTi-tP4_2c(1).png)
 
 ## Installation
 
 ```bash
-$ git clone https://github.com/EmilJaffal/Site-Analysis
-$ cd Site-Analysis
+$ git clone https://github.com/EmilJaffal/High-throughput-LMTO-plotter
+$ cd High-throughput-LMTO-plotter
 $ pip install -r requirements.txt
-$ python main.py [name].csv [cif_folder_name]
+$ python plotter.py
 ```
 
 ## Contributors
 
-- Anton Oliynyk
-- [Balaranjan Selvaratnam](https://github.com/balaranjan)
 - [Emil Jaffal](https://github.com/EmilJaffal)
+- [Balaranjan Selvaratnam](https://github.com/balaranjan)
+- Anton Oliynyk
 
 ## How to ask for help
 
-`Site-Analysis` is also designed for experimental materials scientists and chemists.
-
 - If you have any issues or questions, please feel free to reach out or
-  [leave an issue](https://github.com/emiljaffal/Site-Analysis/issues).
+  [leave an issue](https://github.com/emiljaffal/High-throughput-LMTO-plotter/issues).
