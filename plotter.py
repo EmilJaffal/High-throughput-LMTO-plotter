@@ -35,33 +35,48 @@ def extract_elements(label):
     return re.findall(r'[A-Z][a-z]?', label)
 
 def get_element_color(label, elements):
-    if label.lower() == 'total':
+    label_lower = label.lower()
+    if label_lower == 'total':
         return 'black', '-'
-    if label.lower() == 'e':
+    if label_lower == 'e':
         return 'darkgrey', '--'
+
     elements = [e for e in elements if e.lower() != 'e']
     element_count = len(elements)
+
     if element_count == 1:
         return 'blue', '-'
-    elif element_count == 2:
+    if element_count == 2:
         return ('blue', '-') if label == elements[0] else ('red', '-')
-    elif element_count == 3:
+    if element_count == 3:
         if label == elements[0]:
             return 'blue', '-'
-        elif label in transition_metals:
+        if label in transition_metals:
             return 'grey', '-'
-        elif label == elements[2]:
+        if label == elements[2]:
             return 'red', '-'
-    elif element_count == 4:
+    if element_count == 4:
         if label == elements[0]:
             return 'blue', '-'
-        elif label in transition_metals:
+        if label in transition_metals:
             return 'grey', '-'
-        elif label == elements[2]:
+        if label == elements[2]:
             return 'green', '-'
-        elif label == elements[3]:
+        if label == elements[3]:
             return 'red', '-'
-    return 'black', '-'
+        return 'orange', '-'
+    if element_count == 5:
+        if label == elements[0]:
+            return 'blue', '-'
+        if label in transition_metals:
+            return 'grey', '-'
+        if label == elements[2]:
+            return 'green', '-'
+        if label == elements[3]:
+            return 'red', '-'
+        if label == elements[4]:
+            return 'orange', '-'
+    return 'pink', '-'
 
 def plot_dos(folder_path):
     def plot(include_e):
@@ -125,10 +140,18 @@ def plot_dos(folder_path):
 
         ax.set_ylabel('energy, eV', fontsize=35)
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-        ax.legend(frameon=False, fontsize=30, loc='lower right', handlelength=0.75, columnspacing=0.1)
+
+        # Place legend after all plotting, with high zorder and optionally a white background
+        legend = ax.legend(
+            frameon=True, fontsize=30, loc='lower right',
+            handlelength=0.75, columnspacing=0.1, facecolor='white'
+        )
+        legend.set_zorder(99)
 
         folder_name = os.path.basename(folder_path).split('-')[0]
-        folder_name_subscripted = re.sub(r'(\d+)', lambda x: r'$_\mathrm{' + x.group(0) + r'}$', folder_name)
+        folder_name_cleaned = re.sub(r'(?<=[A-Za-z])1(?=[A-ZaZ])', '', folder_name)
+        folder_name_cleaned = re.sub(r'1$', '', folder_name_cleaned)
+        folder_name_subscripted = re.sub(r'(\d+)', lambda x: r'$_\mathrm{' + x.group(0) + r'}$', folder_name_cleaned)
         ax.set_title(folder_name_subscripted + ' DOS', fontsize=35, pad=20)
 
         x_position = ax.get_xlim()[1]
@@ -177,7 +200,9 @@ def plot_bandstructure(folder_path):
     labels = points_data['point'].tolist()
 
     folder_name = os.path.basename(folder_path).split('-')[0]
-    folder_name_subscripted = re.sub(r'(\d+)', lambda x: r'$_\mathrm{' + x.group(0) + r'}$', folder_name)
+    folder_name_cleaned = re.sub(r'(?<=[A-Za-z])1(?=[A-Za-z])', '', folder_name)
+    folder_name_cleaned = re.sub(r'1$', '', folder_name_cleaned)
+    folder_name_subscripted = re.sub(r'(\d+)', lambda x: r'$_\mathrm{' + x.group(0) + r'}$', folder_name_cleaned)
 
     x_min = min(ticks)
     x_max = max(ticks)
@@ -229,7 +254,7 @@ def plot_bandstructure(folder_path):
 
 def main():
     parent_folder = input("Enter the directory path: ").strip()
-    process_multiple = input("Would you like to process a folder of different structures? (y/n): ").strip().lower()
+    process_multiple = input("Would you like to process a folder of different structures, i.e., a folder of folders? (y/n): ").strip().lower()
 
     if process_multiple == 'y':
         choice = input("Choose an option for all folders: 1. Plot DOS, 2. Plot band structure, 3. Plot all of the above: ").strip()
