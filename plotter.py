@@ -99,7 +99,7 @@ def plot_dos(folder_path):
 
             x = data['Energy'].values
             y = data['DOS'].values
-            all_y_values.extend(y[(x >= -5) & (x <= 2)])
+            all_y_values.extend(y[(x >= -6) & (x <= 2)])
 
             label = os.path.splitext(os.path.basename(filename))[0].replace('DOS-', '')
             elements = extract_elements(label)
@@ -108,8 +108,12 @@ def plot_dos(folder_path):
 
         all_elements = list(set(all_elements))
         sorted_elements = sorted(all_elements, key=lambda e: mendeleev_numbers.get(e, float('inf')))
-        max_y = max(all_y_values)
-        buffer = 0.1 * max_y
+        if all_y_values:
+            max_y = max(all_y_values)
+            buffer = 0.1 * max_y
+        else:
+            print("No DOS data in the range -6 <= Energy <= 2. Skipping plot. This may be due to an empty or incorrectly formatted DOS.csv file.")
+            return
 
         def sort_key(item):
             label = item[2]
@@ -129,7 +133,7 @@ def plot_dos(folder_path):
             zorder_value = 10 if label.lower() == 'total' else 0
             ax.plot(y, x, label=label, color=color, linewidth=5, linestyle=linestyle, zorder=zorder_value)
 
-        ax.set_ylim(-5, 2)
+        ax.set_ylim(-6, 2)
         ax.set_xlim(0, max_y + buffer)
         ax.axhline(0, color='black', linestyle='--', linewidth=3)
         ax.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
@@ -252,12 +256,80 @@ def plot_bandstructure(folder_path):
     print(f"Plot saved to: {save_path}")
     plt.close(fig)  
 
+def plot_cohp(folder_path):
+    cohp_files = glob.glob(os.path.join(folder_path, 'DATA.COHP*'))
+    if not cohp_files:
+        print("COHP file not found in:", folder_path)
+        return
+
+    plt.rcParams.update({'font.size': 35, 'axes.labelsize': 35, 'xtick.labelsize': 35, 'ytick.labelsize': 35})
+
+    fig, ax = plt.subplots(figsize=(8, 15))
+    color_cycle = ['red', 'orange', 'green', 'blue', 'purple', 'pink']
+
+    all_x_values = []
+    for idx, cohp_file in enumerate(cohp_files):
+        cohp_data = pd.read_csv(cohp_file, sep=r'\s+', header=None, names=['energy', 'cohp', 'int_cohp'])
+        pair = os.path.basename(cohp_file).replace('DATA.COHP_', '').replace('.csv', '').replace('DATA.COHP', '').replace('_', '-')
+        if not pair or pair == 'DATA.COHP':
+            pair = 'Total'
+        color = color_cycle[idx % len(color_cycle)]
+        ax.plot(
+            cohp_data['cohp'], cohp_data['energy'],
+            label=pair, color=color, linewidth=5
+        )
+        all_x_values.extend(np.abs(cohp_data['cohp'].values))
+
+    # Set axis limits and style to match DOS plot
+    ax.set_ylim(-6, 2)
+    max_x = max(all_x_values) if all_x_values else 1
+    buffer = 0.1 * max_x
+    ax.set_xlim(-(max_x + buffer), max_x + buffer)
+    ax.axhline(0, color='black', linestyle='--', linewidth=3)
+    ax.axvline(0, color='black', linestyle='--', linewidth=3)
+    ax.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
+    ax.tick_params(axis='y', labelsize=35, width=3, length=10)
+
+    for spine in ax.spines.values():
+        spine.set_linewidth(2.5)
+
+    ax.set_ylabel('energy (eV)', fontsize=35)
+    ax.set_xlabel('-COHP', fontsize=35)
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+    legend = ax.legend(frameon=True, fontsize=30, loc='lower right', handlelength=0.75, columnspacing=0.1, facecolor='white')
+    legend.set_zorder(99)
+
+    folder_name = os.path.basename(folder_path).split('-')[0]
+    folder_name_cleaned = re.sub(r'(?<=[A-Za-z])1(?=[A-Za-z])', '', folder_name)
+    folder_name_cleaned = re.sub(r'(?<!\d)1$', '', folder_name_cleaned)
+    folder_name_subscripted = re.sub(r'(\d+)', lambda x: r'$_\mathrm{' + x.group(0) + r'}$', folder_name_cleaned)
+    ax.set_title(folder_name_subscripted + ' COHP', fontsize=35, pad=20)
+
+    x_position = ax.get_xlim()[1]
+    ax.annotate(
+        r'$E_{\mathrm{F}}$',
+        xy=(x_position, 0),
+        xytext=(10, 0),
+        textcoords='offset points',
+        fontsize=35,
+        va='center',
+        ha='left',
+        color='black'
+    )
+
+    plt.tight_layout()
+    save_path = os.path.join(folder_path, f'{folder_name}_COHP.png')
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    print(f"Plot saved to: {save_path}")
+    plt.close(fig)
+
 def main():
     parent_folder = input("Enter the directory path: ").strip()
     process_multiple = input("Would you like to process a folder of different structures, i.e., a folder of folders? (y/n): ").strip().lower()
 
     if process_multiple == 'y':
-        choice = input("Choose an option for all folders: 1. Plot DOS, 2. Plot band structure, 3. Plot all of the above: ").strip()
+        choice = input("Choose an option for all folders: 1. Plot DOS, 2. Plot band structure, 3. Plot COHP, 4. Plot all of the above: ").strip()
         for folder_name in os.listdir(parent_folder):
             folder_path = os.path.join(parent_folder, folder_name)
             if os.path.isdir(folder_path):
@@ -267,20 +339,26 @@ def main():
                 elif choice == "2":
                     plot_bandstructure(folder_path)
                 elif choice == "3":
+                    plot_cohp(folder_path)
+                elif choice == "4":
                     plot_dos(folder_path)
                     plot_bandstructure(folder_path)
+                    plot_cohp(parent_folder)
                 else:
                     print("Invalid choice.")
                     break
     else:
-        choice = input("Choose an option: 1. Plot DOS, 2. Plot band structure, 3. Plot all of the above: ").strip()
+        choice = input("Choose an option: 1. Plot DOS, 2. Plot band structure, 3. Plot COHP, 4. Plot all of the above: ").strip()
         if choice == "1":
             plot_dos(parent_folder)
         elif choice == "2":
             plot_bandstructure(parent_folder)
         elif choice == "3":
+            plot_cohp(parent_folder)
+        elif choice == "4":
             plot_dos(parent_folder)
             plot_bandstructure(parent_folder)
+            plot_cohp(parent_folder)
         else:
             print("Invalid choice.")
 
