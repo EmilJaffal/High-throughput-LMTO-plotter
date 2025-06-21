@@ -1,13 +1,13 @@
 # High-throughput LMTO plotter
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/EmilJaffal/High-throughput-LMTO-plotter/blob/main/LICENSE)
-![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)
+![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)
 
 This script parses .csv files produced by the [high-throughput LMTO package](https://github.com/balaranjan/High-throughput-LMTO) and automatically produces easily readable & aesthetically pleasing plots ready for publication, posters or presentations. Run the plotter.py file and input the directory to either: a folder (titled with the composition/structure) or a folder (that can be any name) of folders (titled with the composition/structure). 
 
 The plotter so far can generate density of states, bandstructure and COHP plots for LMTO. The software is also very easily changeable to adjust axes, titles, etc.
 
-> The current README.md serves as a tutorial and documentation - last update June 20, 2025
+> The current README.md serves as a tutorial and documentation - last update June 21, 2025
 
 ## Demo
 
