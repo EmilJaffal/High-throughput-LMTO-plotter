@@ -1,7 +1,7 @@
 # High-throughput LMTO plotter
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/EmilJaffal/High-throughput-LMTO-plotter/blob/main/LICENSE)
-![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)
+![Python 3.12 | 3.13](https://img.shields.io/badge/python-3.12%20%7C%203.13-blue.svg)
 
 This script parses .csv files produced by the [high-throughput LMTO package](https://github.com/balaranjan/High-throughput-LMTO) and automatically produces easily readable & aesthetically pleasing plots ready for publication, posters or presentations. Run the plotter.py file and input the directory to either: a folder (titled with the composition/structure) or a folder (that can be any name) of folders (titled with the composition/structure). 
 
