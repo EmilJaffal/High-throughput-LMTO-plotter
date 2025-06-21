@@ -257,7 +257,11 @@ def plot_bandstructure(folder_path):
     plt.close(fig)  
 
 def plot_cohp(folder_path):
-    cohp_files = glob.glob(os.path.join(folder_path, 'DATA.COHP*'))
+    cohp_files = [
+        os.path.join(folder_path, f)
+        for f in os.listdir(folder_path)
+        if f.lower().startswith('data.cohp')
+    ]
     if not cohp_files:
         print("COHP file not found in:", folder_path)
         return
@@ -270,8 +274,8 @@ def plot_cohp(folder_path):
     all_x_values = []
     for idx, cohp_file in enumerate(cohp_files):
         cohp_data = pd.read_csv(cohp_file, sep=r'\s+', header=None, names=['energy', 'cohp', 'int_cohp'])
-        pair = os.path.basename(cohp_file).replace('DATA.COHP_', '').replace('.csv', '').replace('DATA.COHP', '').replace('_', '-')
-        if not pair or pair == 'DATA.COHP':
+        pair = os.path.basename(cohp_file).replace('data.cohp', '').replace('.csv', '').replace('data.cohp', '').replace('_', '-')
+        if not pair or pair == 'data.cohp':
             pair = 'Total'
         color = color_cycle[idx % len(color_cycle)]
         ax.plot(
